@@ -29,11 +29,11 @@ namespace Selu383.SP24.Api.Entities
         public string Address { get; set; }
     }
 
-    public class HotelEntityTypeConfiguration : IEntityTypeConfiguration<Hotel>
-    {
-        public void Configure(EntityTypeBuilder<Hotel> builder)
-        {
-            builder.ToTable("Hotels");
-        }
-    }
+    //public class HotelEntityTypeConfiguration : IEntityTypeConfiguration<Hotel>
+    //{
+    //    public void Configure(EntityTypeBuilder<Hotel> builder)
+    //    {
+    //        builder.ToTable("Hotels");
+    //    }
+    //}
 }
