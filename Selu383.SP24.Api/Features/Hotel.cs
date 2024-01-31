@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Selu383.SP24.Api.Features
+﻿namespace Selu383.SP24.Api.Features
 {
     public class Hotel
     {
