@@ -27,29 +27,30 @@ namespace Selu383.SP24.Api.Controllers
                     Address = hotel.Address,
                 }).ToList();
 
-            return Ok(data);
+            return Ok();
                 
 
         }
 
-        [HttpGet("{Id}")]
-        public ActionResult GetById(int Id)
+        [HttpGet("{id}")]
+        public ActionResult GetHotelById(int Id)
         {
 
-            var hotelToGet = _dataContext.Set<Hotel>()
-                .FirstOrDefault(hotel =>  hotel.Id == Id);
+            var h = _dataContext.Set<Hotel>()
+                .FirstOrDefault(h =>  h.Id == Id);
 
-            if (hotelToGet == null)
+            if (h == null)
             {
                 return NotFound();
+
             }
 
             
-            return Ok(hotelToGet);
+            return Ok();
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] HotelCreateDto createDto)
+        public ActionResult CreateHotel([FromBody] HotelCreateDto createDto)
         {
             var hotelToCreate = new Hotel
             {
@@ -59,6 +60,7 @@ namespace Selu383.SP24.Api.Controllers
 
             if(hotelToCreate.Name == null)
             {
+
                 return BadRequest();
             }
 
@@ -72,7 +74,8 @@ namespace Selu383.SP24.Api.Controllers
                 return BadRequest();
             }
 
-            _dataContext.Add(hotelToCreate);
+   
+            _dataContext.Set<Hotel>().Add(hotelToCreate);
             _dataContext.SaveChanges();
 
             var hotelToReturn = new HotelGetDto
@@ -85,21 +88,49 @@ namespace Selu383.SP24.Api.Controllers
             return Created("", hotelToReturn);
         }
 
-        [HttpDelete("{Id}")]
-        public ActionResult Delete(int Id)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteHotel(int Id)
         {
-            var hotelToDelete = _dataContext.Set<Hotel>()
-                .FirstOrDefault(hotelToDelete => hotelToDelete.Id == Id);
+            var h = _dataContext.Set<Hotel>()
+                .FirstOrDefault(h => h.Id == Id);
 
-            if(hotelToDelete == null)
+            if(h == null)
             {
                 return NotFound();
             }
 
-            _dataContext.Set<Hotel>().Remove(hotelToDelete);
+            _dataContext.Set<Hotel>().Remove(h);
             _dataContext.SaveChanges();
 
             return Ok();
+        }
+
+        [HttpPut]
+        public ActionResult UpdateHotel([FromBody] HotelUpdateDto updateDto, int id)
+        {
+            
+            var hotelToUpdate = _dataContext.Set<Hotel>()
+                .FirstOrDefault(h => h.Id == id);
+
+            if (hotelToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            hotelToUpdate.Name = updateDto.Name;
+            hotelToUpdate.Address = updateDto.Address;
+
+            _dataContext.SaveChanges();
+
+            var hotelToReturn = new HotelGetDto
+            {
+                Id = hotelToUpdate.Id,
+                Name = hotelToUpdate.Name,
+                Address = hotelToUpdate.Address,
+            };
+
+            return Ok();
+
         }
     }
 }
