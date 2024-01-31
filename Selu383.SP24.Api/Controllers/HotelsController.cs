@@ -17,7 +17,7 @@ namespace Selu383.SP24.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<HotelDto>> GetHotel()
+        public ActionResult<IEnumerable<HotelDto>> ListAllHotels()
         {
             var hotels = dataContext.Set<Hotel>()
                 .Select(x => new HotelDto
@@ -40,6 +40,7 @@ namespace Selu383.SP24.Api.Controllers
             {
                 return NotFound();
             }
+            
 
             var hotelDto = new HotelDto
             {
@@ -101,8 +102,15 @@ namespace Selu383.SP24.Api.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateHotelById(int id, HotelDto updatedHotel)
         {
+           
             if (!ModelState.IsValid)
             {
+                return BadRequest(ModelState);
+            }
+
+            if (string.IsNullOrEmpty(updatedHotel.Name))
+            {
+                ModelState.AddModelError("Name", "Name is a required");
                 return BadRequest(ModelState);
             }
 
@@ -118,16 +126,10 @@ namespace Selu383.SP24.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (string.IsNullOrEmpty(updatedHotel.Name))
-            {
-                ModelState.AddModelError("Name", "Name is a required");
-                return BadRequest(ModelState);
-            }
-
             var existingHotel = dataContext
                 .Set<Hotel>()
                 .FirstOrDefault(x => x.Id == id);
-
+            
             if (existingHotel == null)
             {
                 return NotFound();
